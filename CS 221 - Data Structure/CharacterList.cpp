@@ -124,13 +124,31 @@ Character* CharacterList::deleteCharacter(char* characterName)
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
 	Character* tempHolder = new Character();
+	tempHolder = m_pHead;
+	while (tempHolder->m_pNext != NULL) {
+		if (strcmp(characterName, tempHolder->getName()))
+		{
+			return tempHolder->addItem(newItem);
+		}
+		tempHolder = tempHolder->m_pNext;
+	}
+	delete tempHolder;
+	return false;
 }
 
 Item* CharacterList::getItem(char* characterName, char* itemName) 
 {
 	Character* tempHolder = new Character();
-
+	tempHolder = m_pHead;
+	while (tempHolder->m_pNext != NULL) {
+		if (strcmp(characterName, tempHolder->getName())) 
+		{
+			return tempHolder->getItem(itemName);
+		}
+		tempHolder = tempHolder->m_pNext;
+	}
 	delete tempHolder;
+	return NULL;
 }
 
 Item* CharacterList::dropItem(char* characterName, char* itemName)
@@ -142,5 +160,12 @@ Item* CharacterList::dropItem(char* characterName, char* itemName)
 
 void CharacterList::printCharacter()
 {
-
+	Character* character = new Character();
+	character = m_pHead;
+	
+	while (character->m_pNext != NULL) {
+		character->printAll();
+		character = character->m_pNext;
+	}
+	delete(character);
 }
