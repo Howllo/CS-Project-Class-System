@@ -10,7 +10,6 @@
 
 #ifndef CHARACTERLIST_H
 #define CHARACTERLIST_H
-#pragma once
 
 #include <iostream>
 #include "Character.h"

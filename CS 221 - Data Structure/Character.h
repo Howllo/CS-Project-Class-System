@@ -10,7 +10,6 @@
 
 #ifndef CHARACTER_H
 #define CHARACTER_H
-#pragma once
 
 #include "Item.h"
 #include <string>

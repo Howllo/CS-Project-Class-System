@@ -3,18 +3,22 @@
 ***********************************************/
 
 #include "Character.h"
+#include "CharacterList.h"
+#include "Item.h"
 #include <iostream>
 #include <string>
 
 using std::cout; using std::endl;
 using std::string; using std::cin;
 
-void FullTestingProtocol() {
+void AddCharacterTestFunction();
+
+//Used to create new Characters.
+void FullTestingProtocol(Character* characterObject) {
 	char name[64];
 	string holderString = "";
 	int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
 	int testInt1 = 0, testInt2 = 0, CharTraits[6];
-	Character* characterObject = new Character();
 
 	for (int i = 0; i < 64; i++) {
 		name[i] = '|';
@@ -48,7 +52,7 @@ void FullTestingProtocol() {
 	}
 
 	m_HitPoints = rand() % 20 + 10;
-	cout << "You hits points is: " << m_HitPoints << endl;
+	cout << "Your hits points is: " << m_HitPoints << endl;
 
 	cout << endl;
 
@@ -57,26 +61,25 @@ void FullTestingProtocol() {
 	cout << "Strength Trait: ";
 	cin >> CharTraits[0];
 
-	cout << "Please enter number of traits you want for Dex." << endl;
+	cout << endl << "Please enter number of traits you want for Dex." << endl;
 	cout << "Dex Trait: ";
 	cin >> CharTraits[1];
 
-	cout << "Please enter number of traits you want for Constition." << endl;
+	cout << endl << "Please enter number of traits you want for Constition." << endl;
 	cout << "Constition Trait: ";
 	cin >> CharTraits[2];
 
-	cout << "Please enter number of traits you want for Int." << endl;
+	cout << endl << "Please enter number of traits you want for Int." << endl;
 	cout << "Int Trait: ";
 	cin >> CharTraits[3];
 
-	cout << "Please enter number of traits you want for Wis." << endl;
+	cout << endl << "Please enter number of traits you want for Wis." << endl;
 	cout << "Wis Trait: ";
 	cin >> CharTraits[4];
 
-	cout << "Please enter number of traits you want for Chr." << endl;
+	cout << endl << "Please enter number of traits you want for Chr." << endl;
 	cout << "Chr Trait: ";
 	cin >> CharTraits[5];
-
 
 	characterObject->setName(name);
 	characterObject->setClass(m_Class);
@@ -89,11 +92,6 @@ void FullTestingProtocol() {
 	characterObject->setWisdom(CharTraits[4]);
 	characterObject->setCharisma(CharTraits[5]);
 	characterObject->printAll();
-
-	characterObject->getAlignment();
-	characterObject->getWisdom();
-	cout << "Align - Test Int 1 is: " << testInt1 << endl;
-	cout << "Wisdom - test int 2: " << testInt2 << endl;
 	return;
 }
 
@@ -109,8 +107,33 @@ void ConstructorTest()
 	return;
 }
 
+//Used to add new Character to linked list.
+void AddCharacterTestFunction() 
+{
+	CharacterList characterList;
+	string UserInput = "";
+
+	while (true) {
+		cout << "Do you want to create a new Character?" << endl;
+		std::getline(cin, UserInput);
+
+		if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") 
+		{
+			Character* character = new Character();
+			FullTestingProtocol(character);
+			characterList.addCharacter(character);
+		} 
+		else {
+			cout << "Cancelling creation of next character.." << endl;
+			break;
+		}
+			
+	}
+}
+
 int main(void) {
 	//FullTestingProtocol();
-	ConstructorTest();
+	//ConstructorTest();
+	AddCharacterTestFunction();
 	return 0;
 }

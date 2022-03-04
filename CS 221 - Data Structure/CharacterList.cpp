@@ -26,16 +26,15 @@ CharacterList::~CharacterList()
 
 bool CharacterList::addCharacter(Character* newCharacter) 
 {
-	Character* tempHolder = new Character();
-	Character* tempHolderTwo = new Character();
-	tempHolder->m_pNext = newCharacter->m_pNext;
+	Character* tempHolder;
+	Character* tempHolderTwo;
 	char characterName[64];
 	char firstCharacterName[64];
 	char secondCharacterName[64];
 
-	strncpy(characterName,newCharacter->getName(), 64);
+	strncpy_s(characterName,newCharacter->getName(), 64);
 	if(m_pHead !=NULL)
-		strncpy(firstCharacterName, m_pHead->getName(), 64);
+		strncpy_s(firstCharacterName, m_pHead->getName(), 64);
 
 	//Check if newly added character name is less than first character of head.
 	if (m_pHead == NULL) {
@@ -48,10 +47,12 @@ bool CharacterList::addCharacter(Character* newCharacter)
 		return true;
 	}
 
+	tempHolder = m_pHead;
+
 	while (tempHolder->m_pNext != NULL) {
-		strncpy(firstCharacterName, tempHolder->getName(),64);
+		strncpy_s(firstCharacterName, tempHolder->getName(),64);
 		if(tempHolder->m_pNext != NULL)
-			strncpy(secondCharacterName, tempHolder->m_pNext->getName(), 64);
+			strncpy_s(secondCharacterName, tempHolder->m_pNext->getName(), 64);
 
 		//Find a place for new node based on first character. (Each chararcter have a number).
 		if (characterName[0] > firstCharacterName[0] && characterName[0] < secondCharacterName[0] 
@@ -63,15 +64,11 @@ bool CharacterList::addCharacter(Character* newCharacter)
 				tempHolderTwo = tempHolder->m_pNext;
 				tempHolder->m_pNext = newCharacter;
 				tempHolder->m_pNext->m_pNext = tempHolderTwo;
-				delete tempHolder;
-				delete tempHolderTwo;
 				return true;
 			}
 			else 
 			{
 				tempHolder->m_pNext = newCharacter;
-				delete tempHolder;
-				delete tempHolderTwo;
 				return true;
 			}
 		}	//If they are the same number check the second ones
@@ -82,31 +79,24 @@ bool CharacterList::addCharacter(Character* newCharacter)
 				tempHolderTwo = tempHolder->m_pNext;
 				tempHolder->m_pNext = newCharacter;
 				tempHolder->m_pNext->m_pNext = tempHolderTwo;
-				delete tempHolder;
-				delete tempHolderTwo;
 				return true;
 			}
 		}
 		tempHolder = tempHolder->m_pNext;
 	}
-
-	delete tempHolder;
-	delete tempHolderTwo;
 	return false;
 }
 
 Character* CharacterList::deleteCharacter(char* characterName) 
 {
-	Character* tempHolder = new Character();
+	Character* tempHolder;
 	Character* tempHolderTwo = new Character();
 	char firstCharArray[64];
-
 	tempHolder = m_pHead;
 
 	while (tempHolder->m_pNext != NULL) 
 	{
-		strncpy(firstCharArray, tempHolder->getName(), 64);
-		if (strcmp(characterName, firstCharArray)) {
+		if (strcmp(characterName, tempHolder->getName())) {
 			tempHolderTwo->m_pNext = tempHolder->m_pNext;
 			tempHolder->m_pNext = NULL;
 			delete tempHolderTwo;
@@ -115,15 +105,13 @@ Character* CharacterList::deleteCharacter(char* characterName)
 		tempHolderTwo = tempHolder;
 		tempHolder = tempHolder->m_pNext;
 	}
-
-	delete tempHolder;
 	delete tempHolderTwo;
 	return NULL;
 }
 
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
-	Character* tempHolder = new Character();
+	Character* tempHolder;
 	tempHolder = m_pHead;
 	while (tempHolder->m_pNext != NULL) {
 		if (strcmp(characterName, tempHolder->getName()))
@@ -132,7 +120,6 @@ bool CharacterList::addItem(char* characterName, Item* newItem)
 		}
 		tempHolder = tempHolder->m_pNext;
 	}
-	delete tempHolder;
 	return false;
 }
 
@@ -153,19 +140,23 @@ Item* CharacterList::getItem(char* characterName, char* itemName)
 
 Item* CharacterList::dropItem(char* characterName, char* itemName)
 {
-	Character* tempHolder = new Character();
-
-	delete tempHolder;
+	Character* tempHolder;
+	tempHolder = m_pHead;
+	while (tempHolder->m_pNext != NULL) {
+		if (strcmp(characterName, tempHolder->getName())) {
+			return tempHolder->dropItem(itemName);
+		}
+	}
+	return NULL;
 }
 
 void CharacterList::printCharacter()
 {
-	Character* character = new Character();
+	Character* character;
 	character = m_pHead;
 	
 	while (character->m_pNext != NULL) {
 		character->printAll();
 		character = character->m_pNext;
 	}
-	delete(character);
 }

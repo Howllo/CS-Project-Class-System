@@ -25,11 +25,11 @@ Character::Character() {
 	}
 
 	for (int i = 0; i < 10; i++) {
-		m_Items->m_dValue = 0.0;
-		m_Items->m_dWeight = 0.0;
-		m_Items->m_Itype = 0;
-		for (int i = 0; i < 64; i++) {
-			m_Items->m_sItemName[i] = '|';
+		m_Items[i].m_dValue = 0.0;
+		m_Items[i].m_dWeight = 0.0;
+		m_Items[i].m_Itype = 0;
+		for (int d = 0; d < 64; d++) {
+			m_Items[i].m_sItemName[d] = '|';
 		}
 	}
 
@@ -212,7 +212,7 @@ Item* Character::dropItem(char* itemName)
 			Item* newItem = new Item();
 			*newItem = m_Items[i];
 			// Set the name of the item to the "Empty" string
-			strcpy(m_Items[i].m_sItemName, "---");
+			strcpy_s(m_Items[i].m_sItemName, "---");
 			return newItem;
 		}
 	}
@@ -220,6 +220,7 @@ Item* Character::dropItem(char* itemName)
 }
 
 void Character::printAll() {
+	string ItemName;
 	cout << "\tCharacter: " << endl;
 	cout << "Name:\t";
 
@@ -233,7 +234,7 @@ void Character::printAll() {
 	}
 	catch (const std::exception&)
 	{
-		cout << "Printall for statement erro!" << endl;
+		cout << "PrintAll -> For statement error!" << endl;
 	}
 
 	cout << endl;
@@ -248,4 +249,18 @@ void Character::printAll() {
 	cout << "Intelligence:\t" << m_iCharTraits[3] << endl;
 	cout << "Wisdom:\t\t" << m_iCharTraits[4] << endl;
 	cout << "Charisma:\t" << m_iCharTraits[5] << endl;
+
+	cout << endl << "Player Inventory:" << endl;
+	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
+		cout << "\t\t Item Number: " << i << endl;
+		cout << "Item Name: ";
+		for (int i = 0; i < 64; i++) {
+			cout << m_Items[i].m_sItemName;
+		}
+		cout << endl;
+		
+		cout << "Item Type: " << m_Items[i].m_Itype << endl;
+		cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
+		cout << "Item Value: " << m_Items[i].m_dValue << endl;
+	}
 }
