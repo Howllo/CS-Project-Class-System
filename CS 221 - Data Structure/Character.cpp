@@ -17,9 +17,8 @@
 using std::cout; using std::endl;
 using std::string; using std::cin;
 
-Character::Character() {
-	m_pNext = NULL;
-
+Character::Character() 
+{
 	for (int i = 0; i < 64; i++) {
 		m_sName[i] = '|';
 	}
@@ -42,6 +41,7 @@ Character::Character() {
 	m_iCharTraits[3] = 0;
 	m_iCharTraits[4] = 0;
 	m_iCharTraits[5] = 0;
+	m_pNext = nullptr;
 }
 
 Character::Character(char* name, int cl, int al, int hp, int str, int dex, int con, int itl, int wis, int chr) 
@@ -73,11 +73,13 @@ Character::~Character()
 {
 }
 
-char *Character::getName() {
+char *Character::getName() 
+{
 	return m_sName;
 }
 
-void Character::setName(char* name) {
+void Character::setName(char* name) 
+{
 	try
 	{
 		for (int i = 0; i < 64; i++) {
@@ -221,7 +223,9 @@ Item* Character::dropItem(char* itemName)
 
 void Character::printAll() {
 	string ItemName;
-	cout << "\tCharacter: " << endl;
+	int userInput = 0;
+
+	cout << endl << "\tCharacter: " << endl;
 	cout << "Name:\t";
 
 	try
@@ -250,17 +254,26 @@ void Character::printAll() {
 	cout << "Wisdom:\t\t" << m_iCharTraits[4] << endl;
 	cout << "Charisma:\t" << m_iCharTraits[5] << endl;
 
-	cout << endl << "Player Inventory:" << endl;
-	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
-		cout << "\t\t Item Number: " << i << endl;
-		cout << "Item Name: ";
-		for (int i = 0; i < 64; i++) {
-			cout << m_Items[i].m_sItemName;
+	cout << "Do you want to display the items? (0/1)" << endl;
+	cin >> userInput;
+	if (userInput == 1) {
+		cout << endl << "Player Inventory:" << endl;
+		for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
+			cout << "\t\t Item Number: " << i << endl;
+			cout << "Item Name: ";
+			for (int n = 0; n < 64; n++) {
+				if (m_Items[i].m_sItemName[0] == '|')
+					cout << "Item: " << i;
+
+				if (m_Items[i].m_sItemName[n] == '|')
+					break;
+
+				cout << m_Items[i].m_sItemName[n];
+			}
+			cout << endl;
+			cout << "Item Type: " << m_Items[i].m_Itype << endl;
+			cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
+			cout << "Item Value: " << m_Items[i].m_dValue << endl;
 		}
-		cout << endl;
-		
-		cout << "Item Type: " << m_Items[i].m_Itype << endl;
-		cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
-		cout << "Item Value: " << m_Items[i].m_dValue << endl;
 	}
 }

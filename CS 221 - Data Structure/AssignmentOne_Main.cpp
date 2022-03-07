@@ -12,6 +12,8 @@ using std::cout; using std::endl;
 using std::string; using std::cin;
 
 void AddCharacterTestFunction();
+void AutoTestFillLinkedList();
+void DeleteCharacterTestFunction(char* charName);
 
 //Used to create new Characters.
 void FullTestingProtocol(Character* characterObject) {
@@ -95,6 +97,27 @@ void FullTestingProtocol(Character* characterObject) {
 	return;
 }
 
+void NameTest(Character* characterObject) {
+	char name[64];
+	string holderString = "";
+	int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
+	int testInt1 = 0, testInt2 = 0, CharTraits[6];
+
+	for (int i = 0; i < 64; i++) {
+		name[i] = '|';
+	}
+
+	cout << "Please enter a name that is less than 64 Characters." << endl;
+	std::getline(cin, holderString);
+	cout << endl;
+	for (int i = 0; i < holderString.length(); i++) {
+		if (holderString[i] == '|')
+			break;
+		name[i] = holderString[i];
+	}
+	characterObject->setName(name);
+}
+
 void ConstructorTest()
 {
 	char name[64] = { "Tony Hardiman" };
@@ -112,28 +135,129 @@ void AddCharacterTestFunction()
 {
 	CharacterList characterList;
 	string UserInput = "";
+	char char_Array[64];
 
 	while (true) {
 		cout << "Do you want to create a new Character?" << endl;
 		std::getline(cin, UserInput);
+		cout << endl;
 
 		if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") 
 		{
 			Character* character = new Character();
-			FullTestingProtocol(character);
-			characterList.addCharacter(character);
+			NameTest(character);
+			bool getState = characterList.addCharacter(character);
+			if (getState) {
+				cout << "Is it true or false: " << "true." << endl;
+			}
+			else if (!getState) {
+				cout << "Is it true or false: " << "false." << endl;
+			}
 		} 
 		else {
 			cout << "Cancelling creation of next character.." << endl;
+			characterList.printCharacter();
 			break;
 		}
+	}
+
+	cout << "Do you want to delete a character?" << endl;
+	cin >> UserInput;
+	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
+		cout << "Please enter name exactly you want to delete." << endl;
+		cin >> char_Array;
+		DeleteCharacterTestFunction(char_Array);
+	}
+}
+
+void DeleteCharacterTestFunction() {
+	CharacterList characterList;
+	Character* returnedCharacter;
+	string characterName[5] = { "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
+	char* charArray;
+	string userInput = "";
+
+	for (int i = 0; i < 64; i++) {
+		charArray[i] = '|';
+	}
+
+
+	for (int i = 0; i < 5; i++) {
+		userInput = characterName[i];
+
+		for (int i = 0; i < userInput.size(); i++) {
+			charArray[i] = userInput[i];
+		}
 			
+		characterList.deleteCharacter(charArray);
+	}
+	characterList.printCharacter();
+}
+
+//Auto Fill Test
+void AutoTestFillLinkedList() {
+	CharacterList characterList;
+	char UserInput[64] = "";			 //4			  5					2				1					3					6
+	string characterName[6] = { "Tony Hardiman", "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
+	int sizeOfWhat = sizeof(characterName) / sizeof(characterName[0]);
+
+	for (int i = 0; i < sizeOfWhat; i++) {
+		Character* characterObject = new Character();
+		char name[64];
+		string holderString = "";
+		int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
+		int CharTraits[6];
+
+		for (int c = 0; c < 64; c++) {
+			name[c] = '|';
+		}
+
+		holderString = characterName[i];
+		for (int c = 0; c < holderString.length(); c++) {
+			if (holderString[c] == '|')
+				break;
+			name[c] = holderString[c];
+		}
+
+		m_Class = rand() % 6;
+		m_Alignment = rand() % 10;
+		m_HitPoints = rand() % 21;
+		for (int k = 0; k < 6; k++) {
+			CharTraits[k] = rand() % 13;
+		}
+
+		characterObject->setName(name);
+		characterObject->setClass(m_Class);
+		characterObject->setAlignment(m_Alignment);
+		characterObject->setHitPoints(m_HitPoints);
+		characterObject->setStrength(CharTraits[0]);
+		characterObject->setDexterity(CharTraits[1]);
+		characterObject->setConstitution(CharTraits[2]);
+		characterObject->setIntelligence(CharTraits[3]);
+		characterObject->setWisdom(CharTraits[4]);
+		characterObject->setCharisma(CharTraits[5]);
+
+		bool getState = characterList.addCharacter(characterObject);
+		if (getState) {
+			cout << "Is it true or false: " << "true." << endl;
+		}
+		else if (!getState) {
+			cout << "Is it true or false: " << "false." << endl;
+		}
+	}
+	characterList.printCharacter();
+
+	cout << "Do you want to delete a character?" << endl;
+	cin >> UserInput;
+	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
+		DeleteCharacterTestFunction(UserInput);
 	}
 }
 
 int main(void) {
 	//FullTestingProtocol();
 	//ConstructorTest();
-	AddCharacterTestFunction();
+	//AddCharacterTestFunction();
+	AutoTestFillLinkedList();
 	return 0;
 }

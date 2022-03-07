@@ -13,108 +13,123 @@
 #include "Item.h"
 #include <iostream>
 #include <string>
-#pragma once
+
+using std::cout; using std::endl;
+using std::string; using std::cin;
 
 CharacterList::CharacterList() 
 {
-	m_pHead = NULL;
+	m_pHead = nullptr;
 }
 
 CharacterList::~CharacterList() 
 {
 }
 
+//Working
 bool CharacterList::addCharacter(Character* newCharacter) 
 {
-	Character* tempHolder;
-	Character* tempHolderTwo;
-	char characterName[64];
-	char firstCharacterName[64];
-	char secondCharacterName[64];
+	Character* tempHolder = new Character();
+	Character* tempHolderTwo = new Character();
+	bool successfullyAdded = false;
+	char* characterNamePtr = newCharacter->getName();
+	char* headNamePtr = m_pHead->getName();
+	char* characterTempNamePtr = nullptr;
 
-	strncpy_s(characterName,newCharacter->getName(), 64);
-	if(m_pHead !=NULL)
-		strncpy_s(firstCharacterName, m_pHead->getName(), 64);
-
-	//Check if newly added character name is less than first character of head.
-	if (m_pHead == NULL) {
-		m_pHead = newCharacter;
-		return true;
-	}
-	else if (characterName[0] < firstCharacterName[0]) {
-		newCharacter->m_pNext = m_pHead;
+	//Creation of linked list.
+	if (m_pHead == nullptr) {
 		m_pHead = newCharacter;
 		return true;
 	}
 
 	tempHolder = m_pHead;
+	while (tempHolder != nullptr) {
+		//Set Pointer to Name
+		characterTempNamePtr = tempHolder->getName();
 
-	while (tempHolder->m_pNext != NULL) {
-		strncpy_s(firstCharacterName, tempHolder->getName(),64);
-		if(tempHolder->m_pNext != NULL)
-			strncpy_s(secondCharacterName, tempHolder->m_pNext->getName(), 64);
+		if (!successfullyAdded) {
+			//Insert at Head
+			if (characterNamePtr[0] < headNamePtr[0]) {
+				tempHolderTwo = m_pHead;
+				m_pHead = newCharacter;
+				m_pHead->m_pNext = tempHolderTwo;
+				successfullyAdded = true;
+				tempHolderTwo = nullptr;
+			}
 
-		//Find a place for new node based on first character. (Each chararcter have a number).
-		if (characterName[0] > firstCharacterName[0] && characterName[0] < secondCharacterName[0] 
-			|| characterName[0] >= firstCharacterName[0] && secondCharacterName[0] == NULL) 
-		{
-			//Check to see if next is null or not.
-			if (tempHolder->m_pNext != NULL)
-			{
-				tempHolderTwo = tempHolder->m_pNext;
-				tempHolder->m_pNext = newCharacter;
-				tempHolder->m_pNext->m_pNext = tempHolderTwo;
-				return true;
-			}
-			else 
-			{
-				tempHolder->m_pNext = newCharacter;
-				return true;
-			}
-		}	//If they are the same number check the second ones
-		else if (characterName[0] == firstCharacterName[0] && characterName[0] < secondCharacterName[0]) 
-		{
-			if (characterName[1] > firstCharacterName[1] && characterName[1] < secondCharacterName[1])
-			{
-				tempHolderTwo = tempHolder->m_pNext;
-				tempHolder->m_pNext = newCharacter;
-				tempHolder->m_pNext->m_pNext = tempHolderTwo;
-				return true;
+			if (characterNamePtr[0] > headNamePtr[0]) {
+				//Insert in Body
+				if (tempHolder->m_pNext != nullptr) {
+					if (characterNamePtr[0] >= characterTempNamePtr[0] && characterNamePtr[0] < tempHolder->m_pNext->getName()[0]) {
+						tempHolderTwo = tempHolder->m_pNext;
+						tempHolder->m_pNext = newCharacter;
+						tempHolder->m_pNext->m_pNext = tempHolderTwo;
+						tempHolderTwo = nullptr;
+						successfullyAdded = true;
+					}
+				}
+				//Insert at Tail
+				else if (characterNamePtr[0] >= characterTempNamePtr[0] && tempHolder->m_pNext == nullptr) {
+					tempHolder->m_pNext = newCharacter;
+					successfullyAdded = true;
+				}
 			}
 		}
 		tempHolder = tempHolder->m_pNext;
 	}
-	return false;
+	return successfullyAdded;
 }
 
 Character* CharacterList::deleteCharacter(char* characterName) 
 {
-	Character* tempHolder;
+	Character* tempHolder = new Character();
 	Character* tempHolderTwo = new Character();
 	char firstCharArray[64];
 	tempHolder = m_pHead;
 
-	while (tempHolder->m_pNext != NULL) 
+	if (m_pHead == nullptr)
+		return m_pHead;
+	else if (m_pHead->m_pNext == nullptr) {
+		tempHolder = m_pHead;
+		m_pHead = nullptr;
+		return tempHolder;
+	}
+	else if (strcmp(m_pHead->getName(), characterName) == 0) {
+		tempHolder = m_pHead;
+		m_pHead = m_pHead->m_pNext;
+		tempHolder->m_pNext = nullptr;
+		return tempHolder;
+	}
+	
+	while (tempHolder->m_pNext != nullptr)
 	{
-		if (strcmp(characterName, tempHolder->getName())) {
-			tempHolderTwo->m_pNext = tempHolder->m_pNext;
-			tempHolder->m_pNext = NULL;
-			delete tempHolderTwo;
-			return tempHolder;
+		if (strcmp(characterName, tempHolder->getName()) == 0) {
+			if (tempHolder->m_pNext != nullptr) {
+				tempHolderTwo->m_pNext = tempHolder->m_pNext;
+				tempHolder->m_pNext = nullptr;
+				tempHolderTwo = nullptr;
+				return tempHolder;
+			}
+			else if (tempHolder->m_pNext == nullptr) {
+				tempHolderTwo->m_pNext = nullptr;
+				tempHolderTwo = nullptr;
+				return tempHolder;
+			}
 		}
 		tempHolderTwo = tempHolder;
 		tempHolder = tempHolder->m_pNext;
 	}
-	delete tempHolderTwo;
-	return NULL;
+	return nullptr;
 }
 
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
 	Character* tempHolder;
+	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != NULL) {
-		if (strcmp(characterName, tempHolder->getName()))
+	while (tempHolder->m_pNext != nullptr) {
+		arrayPtr = tempHolder->getName();
+		if (strcmp(characterName, arrayPtr))
 		{
 			return tempHolder->addItem(newItem);
 		}
@@ -126,36 +141,42 @@ bool CharacterList::addItem(char* characterName, Item* newItem)
 Item* CharacterList::getItem(char* characterName, char* itemName) 
 {
 	Character* tempHolder = new Character();
+	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != NULL) {
-		if (strcmp(characterName, tempHolder->getName())) 
+	while (tempHolder->m_pNext != nullptr) {
+		arrayPtr = tempHolder->getName();
+		if (strcmp(characterName, arrayPtr))
 		{
 			return tempHolder->getItem(itemName);
 		}
 		tempHolder = tempHolder->m_pNext;
 	}
 	delete tempHolder;
-	return NULL;
+	return nullptr;
 }
 
 Item* CharacterList::dropItem(char* characterName, char* itemName)
 {
 	Character* tempHolder;
+	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != NULL) {
-		if (strcmp(characterName, tempHolder->getName())) {
+	while (tempHolder->m_pNext != nullptr) {
+		arrayPtr = tempHolder->getName();
+		if (strcmp(characterName, arrayPtr)) {
 			return tempHolder->dropItem(itemName);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CharacterList::printCharacter()
 {
 	Character* character;
+	if (m_pHead == nullptr)
+		return;
+
 	character = m_pHead;
-	
-	while (character->m_pNext != NULL) {
+	while (character != nullptr) {
 		character->printAll();
 		character = character->m_pNext;
 	}
