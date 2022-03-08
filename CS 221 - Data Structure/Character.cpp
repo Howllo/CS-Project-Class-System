@@ -225,6 +225,9 @@ void Character::printAll() {
 	string ItemName;
 	int userInput = 0;
 
+	if (m_sName == nullptr)
+		return;
+
 	cout << endl << "\tCharacter: " << endl;
 	cout << "Name:\t";
 
@@ -254,26 +257,22 @@ void Character::printAll() {
 	cout << "Wisdom:\t\t" << m_iCharTraits[4] << endl;
 	cout << "Charisma:\t" << m_iCharTraits[5] << endl;
 
-	cout << "Do you want to display the items? (0/1)" << endl;
-	cin >> userInput;
-	if (userInput == 1) {
-		cout << endl << "Player Inventory:" << endl;
-		for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
-			cout << "\t\t Item Number: " << i << endl;
-			cout << "Item Name: ";
-			for (int n = 0; n < 64; n++) {
-				if (m_Items[i].m_sItemName[0] == '|')
-					cout << "Item: " << i;
+	cout << endl << "Player Inventory:" << endl;
+	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
+		cout << "\t\t Item Number: " << i << endl;
+		cout << "Item Name: ";
+		for (int n = 0; n < 64; n++) {
+			if (m_Items[i].m_sItemName[0] == '|')
+				cout << "Item: " << i;
 
-				if (m_Items[i].m_sItemName[n] == '|')
-					break;
+			if (m_Items[i].m_sItemName[n] == '|')
+				break;
 
-				cout << m_Items[i].m_sItemName[n];
-			}
-			cout << endl;
-			cout << "Item Type: " << m_Items[i].m_Itype << endl;
-			cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
-			cout << "Item Value: " << m_Items[i].m_dValue << endl;
+			cout << m_Items[i].m_sItemName[n];
 		}
+		cout << endl;
+		cout << "Item Type: " << m_Items[i].m_Itype << endl;
+		cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
+		cout << "Item Value: " << m_Items[i].m_dValue << endl;
 	}
 }

@@ -3,7 +3,7 @@
 *	File: Character.cpp
 *	Author: Tony A. Hardiman Jr.
 *	Purpose: Holder file for all the function that the class will be using.
-*	Assignment 1: Programming Assignment 1
+*	Assignment 1: Programming Assignment 2
 *	Declaration: This program is entirely my own work.
 *
 ****************************************/
@@ -80,30 +80,39 @@ bool CharacterList::addCharacter(Character* newCharacter)
 	return successfullyAdded;
 }
 
-Character* CharacterList::deleteCharacter(char* characterName) 
+//Working
+Character* CharacterList::deleteCharacter(char* characterName)
 {
 	Character* tempHolder = new Character();
 	Character* tempHolderTwo = new Character();
-	char firstCharArray[64];
-	tempHolder = m_pHead;
+	string holderStringOne = "", holderStringTwo = "";
 
-	if (m_pHead == nullptr)
-		return m_pHead;
-	else if (m_pHead->m_pNext == nullptr) {
-		tempHolder = m_pHead;
-		m_pHead = nullptr;
-		return tempHolder;
+	//All of this is too static for me to create things properly. If you are having problems getting right
+	//answer just set a array to 64 and initialize it to all |. My with 64 char array and | at the end works.
+
+	for (int i = 0; i < 64; i++) {
+		if (characterName[i] == '|' || characterName[i] == '\0')
+			break;
+		holderStringOne += characterName[i];
 	}
-	else if (strcmp(m_pHead->getName(), characterName) == 0) {
-		tempHolder = m_pHead;
-		m_pHead = m_pHead->m_pNext;
-		tempHolder->m_pNext = nullptr;
-		return tempHolder;
+
+	if (m_pHead == nullptr) {
+		cout << "Enter the null pointer head." << endl;
+		return m_pHead;
 	}
 	
-	while (tempHolder->m_pNext != nullptr)
+	tempHolder = m_pHead;
+	while (tempHolder != nullptr)
 	{
-		if (strcmp(characterName, tempHolder->getName()) == 0) {
+		//Removes the | to be compared due to garbage values at the end of the array. 
+		//For some reason I was getting heart at the end.
+		for (int i = 0; i < 64; i++) {
+			if (tempHolder->getName()[i] == '|')
+				break;
+			holderStringTwo += tempHolder->getName()[i];
+		}
+
+		if (holderStringOne == holderStringTwo) {
 			if (tempHolder->m_pNext != nullptr) {
 				tempHolderTwo->m_pNext = tempHolder->m_pNext;
 				tempHolder->m_pNext = nullptr;
@@ -118,16 +127,17 @@ Character* CharacterList::deleteCharacter(char* characterName)
 		}
 		tempHolderTwo = tempHolder;
 		tempHolder = tempHolder->m_pNext;
+		holderStringTwo = "";
 	}
 	return nullptr;
 }
 
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
-	Character* tempHolder;
+	Character* tempHolder = new Character();
 	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != nullptr) {
+	while (tempHolder != nullptr) {
 		arrayPtr = tempHolder->getName();
 		if (strcmp(characterName, arrayPtr))
 		{
@@ -143,7 +153,7 @@ Item* CharacterList::getItem(char* characterName, char* itemName)
 	Character* tempHolder = new Character();
 	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != nullptr) {
+	while (tempHolder != nullptr) {
 		arrayPtr = tempHolder->getName();
 		if (strcmp(characterName, arrayPtr))
 		{
@@ -160,7 +170,7 @@ Item* CharacterList::dropItem(char* characterName, char* itemName)
 	Character* tempHolder;
 	char* arrayPtr;
 	tempHolder = m_pHead;
-	while (tempHolder->m_pNext != nullptr) {
+	while (tempHolder != nullptr) {
 		arrayPtr = tempHolder->getName();
 		if (strcmp(characterName, arrayPtr)) {
 			return tempHolder->dropItem(itemName);

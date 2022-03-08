@@ -27,10 +27,11 @@ public:
 	bool addItem(char* characterName, Item* newItem);	//Add a new item to character node. Max allow is 10 currently.
 	Item* getItem(char* characterName, char* itemName);	//Get information about item in the character node.
 	Item* dropItem(char* characterName, char* itemName);//Remove a item from character node array.
+	
 	void printCharacter();
 
 private:
 	Character* m_pHead;
 };
 
-#endif // !CHARACTERLIST_H
+#endif // !CHAR

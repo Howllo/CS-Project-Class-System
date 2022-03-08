@@ -30,7 +30,7 @@ public:
 	~Character();		//Destructor
 
 	//Public Variables
-	Character* m_pNext;
+	Character* m_pNext;		//Get next node.
 
 	//String Functions
 	char *getName();	//Get player name.

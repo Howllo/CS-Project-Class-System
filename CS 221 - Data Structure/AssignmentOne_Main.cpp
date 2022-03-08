@@ -13,7 +13,7 @@ using std::string; using std::cin;
 
 void AddCharacterTestFunction();
 void AutoTestFillLinkedList();
-void DeleteCharacterTestFunction(char* charName);
+void DeleteCharacterTestFunction(CharacterList* characterList);
 
 //Used to create new Characters.
 void FullTestingProtocol(Character* characterObject) {
@@ -100,8 +100,6 @@ void FullTestingProtocol(Character* characterObject) {
 void NameTest(Character* characterObject) {
 	char name[64];
 	string holderString = "";
-	int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
-	int testInt1 = 0, testInt2 = 0, CharTraits[6];
 
 	for (int i = 0; i < 64; i++) {
 		name[i] = '|';
@@ -133,7 +131,7 @@ void ConstructorTest()
 //Used to add new Character to linked list.
 void AddCharacterTestFunction() 
 {
-	CharacterList characterList;
+	CharacterList* characterList = new CharacterList();
 	string UserInput = "";
 	char char_Array[64];
 
@@ -146,7 +144,7 @@ void AddCharacterTestFunction()
 		{
 			Character* character = new Character();
 			NameTest(character);
-			bool getState = characterList.addCharacter(character);
+			bool getState = characterList->addCharacter(character);
 			if (getState) {
 				cout << "Is it true or false: " << "true." << endl;
 			}
@@ -156,48 +154,47 @@ void AddCharacterTestFunction()
 		} 
 		else {
 			cout << "Cancelling creation of next character.." << endl;
-			characterList.printCharacter();
+			characterList->printCharacter();
 			break;
 		}
 	}
 
-	cout << "Do you want to delete a character?" << endl;
+	cout << endl << "Do you want to delete a character?" << endl;
 	cin >> UserInput;
 	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
 		cout << "Please enter name exactly you want to delete." << endl;
 		cin >> char_Array;
-		DeleteCharacterTestFunction(char_Array);
+		DeleteCharacterTestFunction(characterList);
 	}
 }
 
-void DeleteCharacterTestFunction() {
-	CharacterList characterList;
+void DeleteCharacterTestFunction(CharacterList* characterList) {;
 	Character* returnedCharacter;
-	string characterName[5] = { "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
-	char* charArray;
-	string userInput = "";
+	string characterName= "Yui Takahashi";	// "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman"
+	char charArray[64];
 
 	for (int i = 0; i < 64; i++) {
 		charArray[i] = '|';
 	}
 
-
-	for (int i = 0; i < 5; i++) {
-		userInput = characterName[i];
-
-		for (int i = 0; i < userInput.size(); i++) {
-			charArray[i] = userInput[i];
-		}
-			
-		characterList.deleteCharacter(charArray);
+	for (int i = 0; i < characterName.size(); i++) {
+		charArray[i] = characterName[i];
+		cout << charArray[i];
 	}
-	characterList.printCharacter();
+	cout << endl;
+
+	returnedCharacter = characterList->deleteCharacter(charArray);
+	if (returnedCharacter != nullptr)
+		returnedCharacter->printAll();
+	else
+		cout << "Return Character is a null pointer" << endl;
+	characterList->printCharacter();
 }
 
 //Auto Fill Test
 void AutoTestFillLinkedList() {
-	CharacterList characterList;
-	char UserInput[64] = "";			 //4			  5					2				1					3					6
+	CharacterList* characterList = new CharacterList();
+	string UserInput = "";			 //4			  5					2				1					3					6
 	string characterName[6] = { "Tony Hardiman", "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
 	int sizeOfWhat = sizeof(characterName) / sizeof(characterName[0]);
 
@@ -237,7 +234,7 @@ void AutoTestFillLinkedList() {
 		characterObject->setWisdom(CharTraits[4]);
 		characterObject->setCharisma(CharTraits[5]);
 
-		bool getState = characterList.addCharacter(characterObject);
+		bool getState = characterList->addCharacter(characterObject);
 		if (getState) {
 			cout << "Is it true or false: " << "true." << endl;
 		}
@@ -245,12 +242,12 @@ void AutoTestFillLinkedList() {
 			cout << "Is it true or false: " << "false." << endl;
 		}
 	}
-	characterList.printCharacter();
+	characterList->printCharacter();
 
-	cout << "Do you want to delete a character?" << endl;
+	cout << endl << "Do you want to delete a character?" << endl;
 	cin >> UserInput;
 	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
-		DeleteCharacterTestFunction(UserInput);
+		DeleteCharacterTestFunction(characterList);
 	}
 }
 
