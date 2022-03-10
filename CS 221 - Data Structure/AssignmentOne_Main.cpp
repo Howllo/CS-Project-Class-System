@@ -14,6 +14,9 @@ using std::string; using std::cin;
 void AddCharacterTestFunction();
 void AutoTestFillLinkedList();
 void DeleteCharacterTestFunction(CharacterList* characterList);
+void AddItemsTestFunction(CharacterList* characterList, char* characterName);
+void GetItemTestFunction(CharacterList* characterList);
+void DeleteItemsTestFunction(CharacterList* characterList);
 
 //Used to create new Characters.
 void FullTestingProtocol(Character* characterObject) {
@@ -166,6 +169,8 @@ void AddCharacterTestFunction()
 		cin >> char_Array;
 		DeleteCharacterTestFunction(characterList);
 	}
+
+
 }
 
 void DeleteCharacterTestFunction(CharacterList* characterList) {;
@@ -174,7 +179,7 @@ void DeleteCharacterTestFunction(CharacterList* characterList) {;
 	char charArray[64];
 
 	for (int i = 0; i < 64; i++) {
-		charArray[i] = '|';
+		charArray[i] = '\0';
 	}
 
 	for (int i = 0; i < characterName.size(); i++) {
@@ -191,27 +196,82 @@ void DeleteCharacterTestFunction(CharacterList* characterList) {;
 	characterList->printCharacter();
 }
 
+void AddItemsTestFunction(CharacterList* characterList, char* characterName) {
+	Item* items = new Item();
+	string randomName[6] = {"Storm of Greatness", "Thunder Hammer", "Creation Book", "Armor Padding", "Book of Knowledge", "Staff"};
+	string completelRandomName = "";
+	
+	for (int i = 0; i < 6; i++) {
+		completelRandomName = randomName[i];
+		for (int i = 0; i < 64; i++) {
+			items->m_sItemName[i] = '\0';
+		}
+		for (int i = 0; i < completelRandomName.size(); i++) {
+			items->m_sItemName[i] = completelRandomName[i];
+		}
+
+		items->m_Itype = rand() % 6;
+		items->m_dWeight = rand() % 50;
+		items->m_dValue = rand() % 1000;
+
+		bool whatReturned = characterList->addItem(characterName, items);
+		if (whatReturned) {
+			cout << "Item returned true." << endl;
+		}
+		else if (!whatReturned) {
+			cout << "Returned false" << endl;
+		}
+	}
+}
+
+void GetItemTestFunction(CharacterList* characterList) {
+	Item* items = new Item();
+	string completelRandomName = "";
+	char itemName[64] = "Storm of Greatness\0";
+	char charName[] = "Aleks Hararcer\0";
+
+	items = characterList->getItem(charName, itemName);
+	
+	cout << "Item Name " << items->m_sItemName << endl;
+	cout << "Item Type " << items->m_Itype << endl;
+	cout << "Item weight " << items->m_dWeight << endl;
+	cout << "Item value " << items->m_dValue << endl;
+}
+
+void DeleteItemsTestFunction(CharacterList* characterList) {
+	Item* items = new Item();
+	string completelRandomName = "";
+	char itemName[64] = "Storm of Greatness\0";
+	char charName[] = "Aleks Hararcer\0";
+
+	cout << "The name of the item is: " << itemName << " to the character of " << charName << endl;
+
+	items = characterList->dropItem(charName, itemName);
+	characterList->printCharacter();
+}
+
 //Auto Fill Test
 void AutoTestFillLinkedList() {
 	CharacterList* characterList = new CharacterList();
 	string UserInput = "";			 //4			  5					2				1					3					6
 	string characterName[6] = { "Tony Hardiman", "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
 	int sizeOfWhat = sizeof(characterName) / sizeof(characterName[0]);
+	string holderString = "";
 
+	//Works
 	for (int i = 0; i < sizeOfWhat; i++) {
 		Character* characterObject = new Character();
 		char name[64];
-		string holderString = "";
 		int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
 		int CharTraits[6];
 
 		for (int c = 0; c < 64; c++) {
-			name[c] = '|';
+			name[c] = '\0';
 		}
 
 		holderString = characterName[i];
 		for (int c = 0; c < holderString.length(); c++) {
-			if (holderString[c] == '|')
+			if (holderString[c] == '\0')
 				break;
 			name[c] = holderString[c];
 		}
@@ -242,13 +302,45 @@ void AutoTestFillLinkedList() {
 			cout << "Is it true or false: " << "false." << endl;
 		}
 	}
-	characterList->printCharacter();
+	//characterList->printCharacter();
 
-	cout << endl << "Do you want to delete a character?" << endl;
+	//Works
+	//cout << endl << "Do you want to delete a character?" << endl;
+	//cin >> UserInput;
+	//if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
+	//	DeleteCharacterTestFunction(characterList);
+	//}
+	//UserInput = "";
+
+	cout << endl << "Do you want to add item a character?" << endl;
 	cin >> UserInput;
 	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
-		DeleteCharacterTestFunction(characterList);
+		char name[64];
+		for (int c = 0; c < 64; c++) {
+			name[c] = '\0';
+		}
+
+		holderString = characterName[rand() % 6];
+		for (int c = 0; c < holderString.length(); c++) {
+			if (holderString[c] == '\0')
+				break;
+			name[c] = holderString[c];
+		}
+		AddItemsTestFunction(characterList, name);
 	}
+
+	cout << endl << "Do you want to get item a character?" << endl;
+	cin >> UserInput;
+	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
+		GetItemTestFunction(characterList);
+	}
+
+	cout << endl << "Do you want to drop item a character?" << endl;
+	cin >> UserInput;
+	if (UserInput == "Yes" || UserInput == "yes" || UserInput == "y" || UserInput == "Y") {
+		DeleteItemsTestFunction(characterList);
+	}
+	characterList->printCharacter();
 }
 
 int main(void) {
