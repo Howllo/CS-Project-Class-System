@@ -14,13 +14,10 @@
 #include <iostream>
 #include <string>
 
-using std::cout; using std::endl;
-using std::string; using std::cin;
-
 Character::Character() 
 {
 	for (int i = 0; i < 64; i++) {
-		m_sName[i] = '|';
+		m_sName[i] = '\0';
 	}
 
 	for (int i = 0; i < 10; i++) {
@@ -28,7 +25,7 @@ Character::Character()
 		m_Items[i].m_dWeight = 0.0;
 		m_Items[i].m_Itype = 0;
 		for (int d = 0; d < 64; d++) {
-			m_Items[i].m_sItemName[d] = '|';
+			m_Items[i].m_sItemName[d] = '\0';
 		}
 	}
 
@@ -54,7 +51,7 @@ Character::Character(char* name, int cl, int al, int hp, int str, int dex, int c
 	}
 	catch (const std::exception&)
 	{
-		cout << "Error! For each statement error." << endl;
+		std::cout << "Error! For each statement error." << std::endl;
 	}
 
 	m_iClass = cl;
@@ -88,7 +85,7 @@ void Character::setName(char* name)
 	}
 	catch (const std::exception&)
 	{
-		cout << "Error! For loop set error." << endl;
+		std::cout << "Error! For loop set error." << std::endl;
 		return;
 	}
 }
@@ -173,7 +170,7 @@ bool Character::addItem(Item* item)
 	// See if there is an empty place to hold this item
 	for (int i = 0; i < 10; i++)
 	{
-		if (strcmp(m_Items[i].m_sItemName, "---") == 0)
+		if (m_Items[i].m_sItemName[0] == '\0')	//Modified
 		{
 			// Found an empty slot so copy this item here
 			m_Items[i] = *item;
@@ -214,7 +211,7 @@ Item* Character::dropItem(char* itemName)
 			Item* newItem = new Item();
 			*newItem = m_Items[i];
 			// Set the name of the item to the "Empty" string
-			strcpy_s(m_Items[i].m_sItemName, "---");
+			strcpy_s(m_Items[i].m_sItemName, "\0");
 			return newItem;
 		}
 	}
@@ -222,57 +219,68 @@ Item* Character::dropItem(char* itemName)
 }
 
 void Character::printAll() {
-	string ItemName;
+	std::string ItemName;
 	int userInput = 0;
+	bool playerInventoryNameHasRan = false;
 
 	if (m_sName == nullptr)
 		return;
-
-	cout << endl << "\tCharacter: " << endl;
-	cout << "Name:\t";
+	//Character
+	std::cout << "\tCharacter: " << std::endl;
+	std::cout << "Name:\t";
 
 	try
 	{
 		for (int i = 0; i < 64; i++) {
-			if (m_sName[i] == '|')
+			if (m_sName[i] == '\0')
 				break;
-			cout << m_sName[i];
+			std::cout << m_sName[i];
 		}
 	}
 	catch (const std::exception&)
 	{
-		cout << "PrintAll -> For statement error!" << endl;
+		std::cout << "PrintAll -> For statement error!" << std::endl;
 	}
 
-	cout << endl;
-	cout << "Class:\t\t" << m_iClass << endl;
-	cout << "Alignment:\t" << m_iAlignment << endl;
-	cout << "Hitpoints:\t" << m_iHitPoints << endl;
+	std::cout << std::endl;
+	std::cout << "Class:\t\t" << m_iClass << std::endl;
+	std::cout << "Alignment:\t" << m_iAlignment << std::endl;
+	std::cout << "Hitpoints:\t" << m_iHitPoints << std::endl;
 
-	cout << endl << "\tCharacter Traits: " << endl;
-	cout << "Strength:\t" << m_iCharTraits[0] << endl;
-	cout << "Dexterity:\t" << m_iCharTraits[1] << endl;
-	cout << "Constituion:\t" << m_iCharTraits[2] << endl;
-	cout << "Intelligence:\t" << m_iCharTraits[3] << endl;
-	cout << "Wisdom:\t\t" << m_iCharTraits[4] << endl;
-	cout << "Charisma:\t" << m_iCharTraits[5] << endl;
+	std::cout << std::endl << "\tCharacter Traits: " << std::endl;
+	std::cout << "Strength:\t" << m_iCharTraits[0] << std::endl;
+	std::cout << "Dexterity:\t" << m_iCharTraits[1] << std::endl;
+	std::cout << "Constituion:\t" << m_iCharTraits[2] << std::endl;
+	std::cout << "Intelligence:\t" << m_iCharTraits[3] << std::endl;
+	std::cout << "Wisdom:\t\t" << m_iCharTraits[4] << std::endl;
+	std::cout << "Charisma:\t" << m_iCharTraits[5] << std::endl;
 
-	cout << endl << "Player Inventory:" << endl;
+	//Inventory
 	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
-		cout << "\t\t Item Number: " << i << endl;
-		cout << "Item Name: ";
-		for (int n = 0; n < 64; n++) {
-			if (m_Items[i].m_sItemName[0] == '|')
-				cout << "Item: " << i;
+		//Don't not print if item is null.
+		if (m_Items[i].m_sItemName[0] == '\0')
+			continue;
 
-			if (m_Items[i].m_sItemName[n] == '|')
+		if (!playerInventoryNameHasRan) {
+			std::cout << std::endl << "Player Inventory:" << std::endl;
+			playerInventoryNameHasRan = true;
+		}
+
+		std::cout << "\t Item Number: " << i+1 << std::endl;
+		std::cout << "Item Name: \t";
+		for (int n = 0; n < 64; n++) {
+			if (m_Items[i].m_sItemName[0] == '\0')
+				std::cout << "Item: " << i;
+
+			if (m_Items[i].m_sItemName[n] == '\0')
 				break;
 
-			cout << m_Items[i].m_sItemName[n];
+			std::cout << m_Items[i].m_sItemName[n];
 		}
-		cout << endl;
-		cout << "Item Type: " << m_Items[i].m_Itype << endl;
-		cout << "Item Weight: " << m_Items[i].m_dWeight << endl;
-		cout << "Item Value: " << m_Items[i].m_dValue << endl;
+		std::cout << std::endl;
+		std::cout << "Item Type: \t" << m_Items[i].m_Itype << std::endl;
+		std::cout << "Item Weight: \t" << m_Items[i].m_dWeight << std::endl;
+		std::cout << "Item Value: \t" << m_Items[i].m_dValue << std::endl;
+		std::cout << std::endl;
 	}
 }
