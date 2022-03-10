@@ -14,9 +14,6 @@
 #include <iostream>
 #include <string>
 
-using std::cout; using std::endl;
-using std::string; using std::cin;
-
 CharacterList::CharacterList() 
 {
 	m_pHead = nullptr;
@@ -80,39 +77,24 @@ bool CharacterList::addCharacter(Character* newCharacter)
 	return successfullyAdded;
 }
 
-//Working
+//Working - Comparison is based on null \0
 Character* CharacterList::deleteCharacter(char* characterName)
 {
 	Character* tempHolder = new Character();
 	Character* tempHolderTwo = new Character();
-	string holderStringOne = "", holderStringTwo = "";
-
-	//All of this is too static for me to create things properly. If you are having problems getting right
-	//answer just set a array to 64 and initialize it to all |. My with 64 char array and | at the end works.
-
-	for (int i = 0; i < 64; i++) {
-		if (characterName[i] == '|' || characterName[i] == '\0')
-			break;
-		holderStringOne += characterName[i];
-	}
+	char* name;
 
 	if (m_pHead == nullptr) {
-		cout << "Enter the null pointer head." << endl;
 		return m_pHead;
 	}
-	
+
 	tempHolder = m_pHead;
 	while (tempHolder != nullptr)
 	{
-		//Removes the | to be compared due to garbage values at the end of the array. 
-		//For some reason I was getting heart at the end.
-		for (int i = 0; i < 64; i++) {
-			if (tempHolder->getName()[i] == '|')
-				break;
-			holderStringTwo += tempHolder->getName()[i];
-		}
-
-		if (holderStringOne == holderStringTwo) {
+		name = tempHolder->getName();
+		std::cout << "Name: " << name << std::endl;
+		std::cout << "Charater Name " << characterName << std::endl;
+		if (strcmp(characterName, name) == 0) {
 			if (tempHolder->m_pNext != nullptr) {
 				tempHolderTwo->m_pNext = tempHolder->m_pNext;
 				tempHolder->m_pNext = nullptr;
@@ -127,7 +109,6 @@ Character* CharacterList::deleteCharacter(char* characterName)
 		}
 		tempHolderTwo = tempHolder;
 		tempHolder = tempHolder->m_pNext;
-		holderStringTwo = "";
 	}
 	return nullptr;
 }
@@ -135,11 +116,12 @@ Character* CharacterList::deleteCharacter(char* characterName)
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
 	Character* tempHolder = new Character();
-	char* arrayPtr;
+	char* name;
+	
 	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
-		arrayPtr = tempHolder->getName();
-		if (strcmp(characterName, arrayPtr))
+		name = tempHolder->getName();
+		if (strcmp(characterName, name) == 0)
 		{
 			return tempHolder->addItem(newItem);
 		}
@@ -151,11 +133,12 @@ bool CharacterList::addItem(char* characterName, Item* newItem)
 Item* CharacterList::getItem(char* characterName, char* itemName) 
 {
 	Character* tempHolder = new Character();
-	char* arrayPtr;
+	char* ptrArray = nullptr;
+
 	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
-		arrayPtr = tempHolder->getName();
-		if (strcmp(characterName, arrayPtr))
+		ptrArray = tempHolder->getName();
+		if (strcmp(characterName, ptrArray) == 0)
 		{
 			return tempHolder->getItem(itemName);
 		}
@@ -167,12 +150,15 @@ Item* CharacterList::getItem(char* characterName, char* itemName)
 
 Item* CharacterList::dropItem(char* characterName, char* itemName)
 {
-	Character* tempHolder;
-	char* arrayPtr;
+	Character* tempHolder = new Character();
+	char* name;
+
 	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
-		arrayPtr = tempHolder->getName();
-		if (strcmp(characterName, arrayPtr)) {
+		name = tempHolder->getName();
+
+		if (strcmp(characterName, name) == 0)
+		{
 			return tempHolder->dropItem(itemName);
 		}
 	}
