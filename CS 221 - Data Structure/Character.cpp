@@ -9,10 +9,6 @@
 ****************************************/
 
 #include "Character.h"
-#include "CharacterList.h"
-#include "Item.h"
-#include <iostream>
-#include <string>
 
 Character::Character() 
 {
@@ -257,7 +253,7 @@ void Character::printAll() {
 
 	//Inventory
 	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
-		//Don't not print if item is null.
+		//Do not print if item is null.
 		if (m_Items[i].m_sItemName[0] == '\0')
 			continue;
 
@@ -283,4 +279,6 @@ void Character::printAll() {
 		std::cout << "Item Value: \t" << m_Items[i].m_dValue << std::endl;
 		std::cout << std::endl;
 	}
+	if (!playerInventoryNameHasRan)
+		std::cout << std::endl;
 }

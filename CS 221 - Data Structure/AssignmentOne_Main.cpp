@@ -26,7 +26,7 @@ void FullTestingProtocol(Character* characterObject) {
 	int testInt1 = 0, testInt2 = 0, CharTraits[6];
 
 	for (int i = 0; i < 64; i++) {
-		name[i] = '|';
+		name[i] = '\0';
 	}
 
 	cout << "Please enter a name that is less than 64 Characters." << endl;
@@ -254,7 +254,7 @@ void DeleteItemsTestFunction(CharacterList* characterList) {
 void AutoTestFillLinkedList() {
 	CharacterList* characterList = new CharacterList();
 	string UserInput = "";			 //4			  5					2				1					3					6
-	string characterName[6] = { "Tony Hardiman", "Yui Takahashi", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman" };
+	string characterName[8] = { "Tony Hardiman", "Yui Takahashi", "Yui Godman", "Yun God", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman"};
 	int sizeOfWhat = sizeof(characterName) / sizeof(characterName[0]);
 	string holderString = "";
 

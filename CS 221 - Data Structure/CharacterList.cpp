@@ -3,16 +3,12 @@
 *	File: Character.cpp
 *	Author: Tony A. Hardiman Jr.
 *	Purpose: Holder file for all the function that the class will be using.
-*	Assignment 1: Programming Assignment 2
+*	Assignment: Programming Assignment 2
 *	Declaration: This program is entirely my own work.
 *
 ****************************************/
 
-#include "Character.h"
 #include "CharacterList.h"
-#include "Item.h"
-#include <iostream>
-#include <string>
 
 CharacterList::CharacterList() 
 {
@@ -26,8 +22,8 @@ CharacterList::~CharacterList()
 //Working
 bool CharacterList::addCharacter(Character* newCharacter) 
 {
-	Character* tempHolder = new Character();
-	Character* tempHolderTwo = new Character();
+	Character* tempHolder = m_pHead;
+	Character* tempHolderTwo;
 	bool successfullyAdded = false;
 	char* characterNamePtr = newCharacter->getName();
 	char* headNamePtr = m_pHead->getName();
@@ -39,7 +35,6 @@ bool CharacterList::addCharacter(Character* newCharacter)
 		return true;
 	}
 
-	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
 		//Set Pointer to Name
 		characterTempNamePtr = tempHolder->getName();
@@ -115,10 +110,9 @@ Character* CharacterList::deleteCharacter(char* characterName)
 
 bool CharacterList::addItem(char* characterName, Item* newItem) 
 {
-	Character* tempHolder = new Character();
+	Character* tempHolder = m_pHead;;
 	char* name;
 	
-	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
 		name = tempHolder->getName();
 		if (strcmp(characterName, name) == 0)
@@ -132,10 +126,9 @@ bool CharacterList::addItem(char* characterName, Item* newItem)
 
 Item* CharacterList::getItem(char* characterName, char* itemName) 
 {
-	Character* tempHolder = new Character();
+	Character* tempHolder = m_pHead;
 	char* ptrArray = nullptr;
 
-	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
 		ptrArray = tempHolder->getName();
 		if (strcmp(characterName, ptrArray) == 0)
@@ -150,10 +143,9 @@ Item* CharacterList::getItem(char* characterName, char* itemName)
 
 Item* CharacterList::dropItem(char* characterName, char* itemName)
 {
-	Character* tempHolder = new Character();
+	Character* tempHolder = m_pHead;
 	char* name;
 
-	tempHolder = m_pHead;
 	while (tempHolder != nullptr) {
 		name = tempHolder->getName();
 
@@ -167,11 +159,10 @@ Item* CharacterList::dropItem(char* characterName, char* itemName)
 
 void CharacterList::printCharacter()
 {
-	Character* character;
+	Character* character = m_pHead;
 	if (m_pHead == nullptr)
 		return;
 
-	character = m_pHead;
 	while (character != nullptr) {
 		character->printAll();
 		character = character->m_pNext;
