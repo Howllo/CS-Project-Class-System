@@ -9,13 +9,11 @@ void Test_Unit::AutoTestFillLinkedList() {
 	string characterName[9] = { "Tony Hardiman", "Yui Takahashi", "Yui Godman", "Yun God", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman", "Autumn Stormlord" };
 	string characterItems[3] = { "Staff", "Spellbook", "Pouch" };
 	string itemDescs[3] = { "Staff of Autumn's is a staff unlike any other", "Spellbook of Knowledge from great Wizard", "Pouch that contains large sum of money" };
-	string holderString = "";
 	char name[64];
 	char itemName[64];
 	int m_Class = 0, m_Alignment = 0, m_HitPoints = 0;
 	int CharTraits[6];
 	int TotalGrade = 0, currentGrade = 0;
-	int counter = 0;
 
 	//Character creation test.
 	cout << "Character is being created name Tony Hardiman." << endl;
