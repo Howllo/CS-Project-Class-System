@@ -168,3 +168,8 @@ void CharacterList::printCharacter()
 		character = character->m_pNext;
 	}
 }
+
+// /!\ This is for testing only /!\ 
+Character* CharacterList::GetHead() {
+	return m_pHead;
+}
