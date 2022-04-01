@@ -16,15 +16,6 @@ Character::Character()
 		m_sName[i] = '\0';
 	}
 
-	for (int i = 0; i < 10; i++) {
-		m_Items[i].m_dValue = 0.0;
-		m_Items[i].m_dWeight = 0.0;
-		m_Items[i].m_Itype = 0;
-		for (int d = 0; d < 64; d++) {
-			m_Items[i].m_sItemName[d] = '\0';
-		}
-	}
-
 	m_iClass = 0;
 	m_iAlignment = 0;
 	m_iHitPoints = 0;
@@ -35,6 +26,8 @@ Character::Character()
 	m_iCharTraits[4] = 0;
 	m_iCharTraits[5] = 0;
 	m_pNext = nullptr;
+	m_pBattleItems = new Possessions;
+	m_pTreasureItems = new Possessions;
 }
 
 Character::Character(char* name, int cl, int al, int hp, int str, int dex, int con, int itl, int wis, int chr) 
@@ -60,6 +53,8 @@ Character::Character(char* name, int cl, int al, int hp, int str, int dex, int c
 	m_iCharTraits[4] = wis;
 	m_iCharTraits[5] = chr;
 	m_pNext = nullptr;
+	m_pBattleItems = nullptr;
+	m_pTreasureItems = nullptr;
 }
 
 Character::~Character()
@@ -81,7 +76,7 @@ void Character::setName(char* name)
 	}
 	catch (const std::exception&)
 	{
-		std::cout << "Error! For loop set error." << std::endl;
+		std::cout << "Error! SetName for loop has a error." << std::endl;
 		return;
 	}
 }
@@ -158,127 +153,43 @@ void Character::setCharisma(int chr) {
 	m_iCharTraits[5] = chr;
 }
 
-//-----------------------------------------------
-// Add an item to the list of items
-//-----------------------------------------------
+
 bool Character::addItem(Item* item)
 {
-	// See if there is an empty place to hold this item
-	for (int i = 0; i < 10; i++)
-	{
-		if (m_Items[i].m_sItemName[0] == '\0')	//Modified
-		{
-			// Found an empty slot so copy this item here
-			m_Items[i] = *item;
-			return true;
-		}
-	}
-	// If we get here then the Items array is full and we
-	//  can't add this item so return false to flag failure.
+
 	return false;
 }
 
-//-----------------------------------------------
-// Get a pointer to an item in the list
-//-----------------------------------------------
 Item* Character::getItem(char* itemName)
 {
-	for (int i = 0; i < 10; i++)
-	{
-		if (strcmp(m_Items[i].m_sItemName, itemName) == 0)
-			return &m_Items[i];
-	}
-	return NULL; // Didn't find
+
+	return NULL;
 }
 
-//-----------------------------------------------
-// Delete an item from the list of items.  Return
-// pointer to item if the item was found or NULL
-// if it was not found in the list.
-//-----------------------------------------------
 Item* Character::dropItem(char* itemName)
 {
-	// Search all items
-	for (int i = 0; i < 10; i++)
-	{
-		// If this it the correct item name
-		if (strcmp(m_Items[i].m_sItemName, itemName) == 0)
-		{
-			Item* newItem = new Item();
-			*newItem = m_Items[i];
-			// Set the name of the item to the "Empty" string
-			strcpy_s(m_Items[i].m_sItemName, "\0");
-			return newItem;
-		}
-	}
+
 	return NULL;
 }
 
 void Character::printAll() {
-	std::string ItemName;
-	int userInput = 0;
-	bool playerInventoryNameHasRan = false;
-
 	if (m_sName == nullptr)
 		return;
+
 	//Character
 	std::cout << "\tCharacter: " << std::endl;
-	std::cout << "Name:\t";
-
-	try
-	{
-		for (int i = 0; i < 64; i++) {
-			if (m_sName[i] == '\0')
-				break;
-			std::cout << m_sName[i];
-		}
-	}
-	catch (const std::exception&)
-	{
-		std::cout << "PrintAll -> For statement error!" << std::endl;
-	}
-
+	std::cout << "Name:\t" << m_sName;
 	std::cout << std::endl;
-	std::cout << "Class:\t\t" << m_iClass << std::endl;
-	std::cout << "Alignment:\t" << m_iAlignment << std::endl;
+	std::cout << "Class\t" << m_iClass;
+	std::cout << "\tAlignment:\t" << m_iAlignment << std::endl;
 	std::cout << "Hitpoints:\t" << m_iHitPoints << std::endl;
-
+	std::cout << "---------------------------------";
 	std::cout << std::endl << "\tCharacter Traits: " << std::endl;
-	std::cout << "Strength:\t" << m_iCharTraits[0] << std::endl;
-	std::cout << "Dexterity:\t" << m_iCharTraits[1] << std::endl;
-	std::cout << "Constituion:\t" << m_iCharTraits[2] << std::endl;
-	std::cout << "Intelligence:\t" << m_iCharTraits[3] << std::endl;
-	std::cout << "Wisdom:\t\t" << m_iCharTraits[4] << std::endl;
-	std::cout << "Charisma:\t" << m_iCharTraits[5] << std::endl;
-
-	//Inventory
-	for (int i = 0; i < sizeof(m_Items) / sizeof(m_Items[0]); i++) {
-		//Do not print if item is null.
-		if (m_Items[i].m_sItemName[0] == '\0')
-			continue;
-
-		if (!playerInventoryNameHasRan) {
-			std::cout << std::endl << "Player Inventory:" << std::endl;
-			playerInventoryNameHasRan = true;
-		}
-
-		std::cout << "\t Item Number: " << i+1 << std::endl;
-		std::cout << "Item Name: \t";
-		for (int n = 0; n < 64; n++) {
-			if (m_Items[i].m_sItemName[0] == '\0')
-				std::cout << "Item: " << i;
-
-			if (m_Items[i].m_sItemName[n] == '\0')
-				break;
-
-			std::cout << m_Items[i].m_sItemName[n];
-		}
-		std::cout << std::endl;
-		std::cout << "Item Type: \t" << m_Items[i].m_Itype << std::endl;
-		std::cout << "Item Weight: \t" << m_Items[i].m_dWeight << std::endl;
-		std::cout << "Item Value: \t" << m_Items[i].m_dValue << std::endl;
-		std::cout << std::endl;
-	}
-	if (!playerInventoryNameHasRan)
-		std::cout << std::endl;
+	std::cout << "STR:\t" << m_iCharTraits[0];
+	std::cout << "\tDEX:\t" << m_iCharTraits[1] << std::endl;
+	std::cout << "CON:\t" << m_iCharTraits[2];
+	std::cout << "\tINT:\t" << m_iCharTraits[3] << std::endl;
+	std::cout << "WIS:\t" << m_iCharTraits[4];
+	std::cout << "\tCHR:\t" << m_iCharTraits[5] << std::endl;
+	std::cout << "---------------------------------" << std::endl;
 }

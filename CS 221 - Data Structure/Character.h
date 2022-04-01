@@ -11,8 +11,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "Item.h"
-#include <string>
+#include "Possessions.h"
 #include <iostream>
 
 class Character 
@@ -21,7 +20,8 @@ private:
 	char m_sName[64];								//Name that can only hold up to 64 characters.
 	int m_iClass, m_iAlignment, m_iHitPoints;		//The player class, their alignment, and how many hitpoints they have.
 	int m_iCharTraits[6];							//Array that holds all the character stats, or known as traits.
-	Item m_Items[10];
+	Possessions *m_pBattleItems;
+	Possessions *m_pTreasureItems;
 
 public:
 	//Constructors
@@ -64,7 +64,6 @@ public:
 	int getCharisma();	//Get player charisma.
 	void setCharisma(int chr);	//Set player charisma.
 
-	//New Functions
 	bool addItem(Item* item); //Add Items to Linked list
 	Item* getItem(char* itemName);	//Get Item(s) from Linked List
 	Item* dropItem(char* itemName);	//Remove Item(s) from Linked List
