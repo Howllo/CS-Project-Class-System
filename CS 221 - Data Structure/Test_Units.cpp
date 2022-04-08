@@ -78,17 +78,43 @@ void Test_Unit::AutoTestFillLinkedList() {
 	AttributeTesting(newCharacter, TotalGrade, currentGrade, CharTraits, m_Class, m_Alignment, m_HitPoints);
 
 	//Adding more Characters and testing.
-	Character* root = characterList->GetHead();
-	TestCharacterLocation(root, characterList, TotalGrade, currentGrade, CharTraits, m_Class, m_Alignment, m_HitPoints);
+	TestCharacterLocation(characterList, TotalGrade, currentGrade, CharTraits, m_Class, m_Alignment, m_HitPoints);
+	characterList->printCharacters();
 
-	cout << "Press [Enter] to see a print the list of players." << endl;
-	system("pause");
-	characterList->printCharacter();
-
-	cout << endl << endl;
+	cout << endl << endl << endl << endl << endl << endl << endl << endl;
 
 	//Item Testing
+	cout << "Starting to add items to character... " << endl;
+	strcpy_s(name, characterName[0].c_str());
+	ItemTesting(characterList, name, TotalGrade, currentGrade); 
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
 
+	//Yui Testing Items
+	strcpy_s(name, characterName[1].c_str());
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+	ItemTesting(characterList, name, TotalGrade, currentGrade);
+
+	cout << endl << endl << endl << endl;
+
+	testRoot = newCharacter->m_pBattleItems->m_pRoot;
+	CharacterAdded = isTreeBalanced(testRoot);
+	if (CharacterAdded) {
+		cout << "The tree is balanced" << endl;
+	}
+	else if (!CharacterAdded) {
+		cout << "The tree is not balanced." << endl;
+	}
 }
 
 Character* Test_Unit::AddCharacterStats(Character* character, char* name, int* CharTraits, int& m_Class, int& m_Alignment, int& m_HitPoints) {
@@ -216,18 +242,22 @@ void Test_Unit::AttributeTesting(Character* newCharacter, int &TotalGrade, int &
 	cout << "Current Grade is: " << currentGrade << " out of " << TotalGrade << endl << endl;
 }
 
-void Test_Unit::TestCharacterLocation(Character* root, CharacterList* characterList, int &TotalGrade, int &currentGrade, int* CharTraits, int& m_Class, int& m_Alignment, int& m_HitPoints) {
+void Test_Unit::TestCharacterLocation(CharacterList* characterList, int &TotalGrade, int &currentGrade, int* CharTraits, int& m_Class, int& m_Alignment, int& m_HitPoints) {
 	string characterName[9] = { "Tony Hardiman", "Yui Takahashi", "Yui Godman", "Yun God", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman", "Autumn Stormlord" };
 	char name[64];
 	bool CharacterAdded = false;
+	Character* root = characterList->GetHead();
 
-	cout << "Player Autumn StormLord Created." << endl;
+	//TONY HARDIAN - 0 / After AUTUMN - 1 / AFTER ZEED - 1 / AFTER CAROL - 2 / AFTER YUI - 2
+
+	//AUTUMN STORMLORD	- 0 
+	cout << "Player Autumn Stormlord Created." << endl;
 	Character* newCharacter = new Character;
 	strcpy_s(name, characterName[8].c_str());
 	newCharacter = AddCharacterStats(newCharacter, name, CharTraits, m_Class, m_Alignment, m_HitPoints);
 	CharacterAdded = characterList->addCharacter(newCharacter);
 	if (CharacterAdded) {
-		TestLocation(root, 8, TotalGrade, currentGrade, 0);
+		TestLocation(characterList, 8, TotalGrade, currentGrade, 0);
 	}
 	else if (!CharacterAdded) {
 		cout << "Failure to add character to linked list!" << endl;
@@ -236,13 +266,14 @@ void Test_Unit::TestCharacterLocation(Character* root, CharacterList* characterL
 	}
 	cout << "Current Grade is: " << currentGrade << " out of " << TotalGrade << endl << endl;
 
+	//ZED NORMAN	- 2 / AFTER CAROL 3 - AFTER YUI - 4
 	cout << "Player Zed Norman Created." << endl;
 	newCharacter = new Character;
 	strcpy_s(name, characterName[7].c_str());
 	newCharacter = AddCharacterStats(newCharacter, name, CharTraits, m_Class, m_Alignment, m_HitPoints);
 	CharacterAdded = characterList->addCharacter(newCharacter);
 	if (CharacterAdded) {
-		TestLocation(root, 7, TotalGrade, currentGrade, 2);
+		TestLocation(characterList, 7, TotalGrade, currentGrade, 2);
 	}
 	else if (!CharacterAdded) {
 		cout << "Failure to add character to linked list!" << endl;
@@ -251,13 +282,14 @@ void Test_Unit::TestCharacterLocation(Character* root, CharacterList* characterL
 	}
 	cout << "Current Grade is: " << currentGrade << " out of " << TotalGrade << endl << endl;
 
+	//CAROL HARDIMAN - 1
 	cout << "Player Carol Hardiman Created." << endl;
 	newCharacter = new Character;
 	strcpy_s(name, characterName[4].c_str());
 	newCharacter = AddCharacterStats(newCharacter, name, CharTraits, m_Class, m_Alignment, m_HitPoints);
 	CharacterAdded = characterList->addCharacter(newCharacter);
 	if (CharacterAdded) {
-		TestLocation(root, 4, TotalGrade, currentGrade, 1);
+		TestLocation(characterList, 4, TotalGrade, currentGrade, 1);
 	}
 	else if (!CharacterAdded) {
 		cout << "Failure to add character to linked list!" << endl;
@@ -266,13 +298,14 @@ void Test_Unit::TestCharacterLocation(Character* root, CharacterList* characterL
 	}
 	cout << "Current Grade is: " << currentGrade << " out of " << TotalGrade << endl << endl;
 
+	//YUI TAKHASHI	- 3
 	cout << "Player Yui Takahashi Created." << endl;
 	newCharacter = new Character;
 	strcpy_s(name, characterName[1].c_str());
 	newCharacter = AddCharacterStats(newCharacter, name, CharTraits, m_Class, m_Alignment, m_HitPoints);
 	CharacterAdded = characterList->addCharacter(newCharacter);
 	if (CharacterAdded) {
-		TestLocation(root, 4, TotalGrade, currentGrade, 3);
+		TestLocation(characterList, 1, TotalGrade, currentGrade, 3);
 	}
 	else if (!CharacterAdded) {
 		cout << "Failure to add character to linked list!" << endl;
@@ -282,13 +315,19 @@ void Test_Unit::TestCharacterLocation(Character* root, CharacterList* characterL
 	cout << "Current Grade is: " << currentGrade << " out of " << TotalGrade << endl << endl;
 }
 
-void Test_Unit::TestLocation(Character* rt, int characterElementLocation, int &TotalGrade, int &currentGrade, int correctLocation) {
+void Test_Unit::TestLocation(CharacterList* list, int characterElementLocation, int &TotalGrade, int &currentGrade, int correctLocation) {
 	string characterName[9] = { "Tony Hardiman", "Yui Takahashi", "Yui Godman", "Yun God", "Carol Hardiman", "Aleks Hararcer", "Isabelle Hardiman", "Zed Norman", "Autumn Stormlord" };
 	int counter = 0;
 	bool executeOnce = false;
+	Character* rt = list->GetHead();
+
+
+	cout << "Head is " << rt->getName() << endl << endl;
 
 	while (rt != nullptr) {
-		if (strcmp(rt->getName(), characterName[characterElementLocation].c_str()) == 0 && counter == correctLocation && !executeOnce) {
+		int testingName = strcmp(rt->getName(), characterName[characterElementLocation].c_str());		
+
+		if (testingName == 0 && counter == correctLocation && !executeOnce) {
 			cout << "Player " << characterName[characterElementLocation] << " added to the list in the correct location." << endl;
 			TotalGrade++;
 			currentGrade += 1;
@@ -305,8 +344,66 @@ void Test_Unit::TestLocation(Character* rt, int characterElementLocation, int &T
 	}
 }
 
-void Test_Unit::ItemTesting(char* charName) {
+void Test_Unit::ItemTesting(CharacterList* characterList, char* charName, int& TotalGrade, int& CurrentGrade) {
 	Item* testItem = new Item;
+	testItem = CreateNewItem();
+	bool WasAdded = characterList->addItem(charName, testItem);
+	cout << charName << "." << endl;
 
+	if (WasAdded) {
+		cout << "Successfully added item to character." << endl;
+		TotalGrade += 1;
+		CurrentGrade += 1;
+	}
+	else if(!WasAdded) {
+		cout << "Failed to added item to character." << endl;
+		TotalGrade += 1;
+		CurrentGrade += 0;
+	}
 
+	cout << endl << "Current points " << CurrentGrade << " out of " << TotalGrade << endl;
+}
+
+Item* Test_Unit::CreateNewItem() {
+	string ItemName[9] = { "Staff", "Spellbook", "Pouch", "Sword", "Warhammer", "Grand Hammer of Destiny", "Moe", "Dagger", 
+						   "Greatsword"};
+	string ItemDesc[9] = { "Staff of Characters's is a staff unlike any other.", "Spellbook of Knowledge from great Wizard",
+		"Pouch that contains large sum of money", "Mighty Sword of Something", "Hammer of Destiny.", "Hammer that warps reality.",
+		"Type of a food that is made from flour.", "Small weapon that is easily concealled.", "Allows for heavy attacks."};
+	Item* item = new Item;
+	int randomItem = rand() % 9;
+
+	item->m_Itype = 1;
+	item->m_dValue = 20;
+	item->m_dWeight = 100;
+	strcpy_s(item->m_sItemName, ItemName[randomItem].c_str());
+	strcpy_s(item->m_sDesc, ItemDesc[randomItem].c_str());
+	cout << "Adding item " << item->m_sItemName << " to the character ";
+	return item;
+}
+
+bool Test_Unit::isTreeBalanced(Item* root) {
+	if (root == nullptr)
+		return 0;
+
+	int leftSub;
+	int rightSub;
+
+	leftSub = height(root->m_pLeft);
+	rightSub = height(root->m_pRight);
+
+	cout << "Left side is " << leftSub << " Right side is: " << rightSub << endl;
+
+	if (abs(leftSub - rightSub) <= 1 && isTreeBalanced(root->m_pLeft) && isTreeBalanced(root->m_pRight)) {
+		return 1;
+	}
+
+	return 0;
+}
+
+int Test_Unit::height(Item* rt) {
+	if (rt == nullptr)
+		return 0;
+
+	return 1 + max(height(rt->m_pLeft), height(rt->m_pRight));
 }
