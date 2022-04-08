@@ -17,8 +17,10 @@
 class Possessions
 {
 private:
-	Item* m_pRoot;
+	
 public:
+	Item* m_pRoot; // MOVE THIS BACK TO PRIVATE
+
 	Possessions();					//Constructor
 	~Possessions();					//Destructor
 	bool addItem(Item* newItem);	//Add item to binary tree.
@@ -29,5 +31,8 @@ private:
 	void printOne(Item* item);		//Print a single item out of the tree.
 	void destroyTree(Item* rt);		//
 	void printAll(Item* rt);
+	void RebalanceTree(Item* rt);
+	bool CheckBalance(Item* rt);
+	int CheckHeight(Item* rt);
 };
 #endif
