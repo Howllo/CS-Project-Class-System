@@ -1,175 +1,160 @@
-/****************************************
-*
-*	File: Character.cpp
-*	Author: Tony A. Hardiman Jr.
-*	Purpose: Holder file for all the function that the class will be using.
-*	Assignment: Programming Assignment 2
-*	Declaration: This program is entirely my own work.
-*
-****************************************/
-
+//------------------------------------------------------------------
+// CharacterList.cpp
+//
+// Implementation file for the list of characters players for  
+//   programming assignment 2.
+// Author: Dr. Rick Coleman
+// Date: January 2004
+//------------------------------------------------------------------
 #include "CharacterList.h"
+#include <stdio.h> 
+#include <string>
+using namespace std;
 
-CharacterList::CharacterList() 
+//-----------------------------------------------
+// Class constructor
+//-----------------------------------------------
+CharacterList::CharacterList()
 {
-	m_pHead = nullptr;
+	m_pHead = NULL;
 }
-
-CharacterList::~CharacterList() 
+//-----------------------------------------------
+// Class destructor
+//-----------------------------------------------
+CharacterList::~CharacterList()
 {
+	Character* temp;
+	temp = m_pHead;
+	while (temp != NULL)
+	{
+		delete m_pHead;
+		m_pHead = temp;
+	}
 }
-
-//Working
-bool CharacterList::addCharacter(Character* newCharacter) 
+//-----------------------------------------------
+// Add a character to the list of characters.
+// This is an unsorted list so we will just add
+//   the character at the m_pHead of the list.
+//-----------------------------------------------
+bool CharacterList::addCharacter(Character* newCharacter)
 {
-	Character* tempHolder = m_pHead;
-	Character* tempHolderTwo;
-	bool successfullyAdded = false;
-	char* characterNamePtr = newCharacter->getName();
-	char* headNamePtr = m_pHead->getName();
-	char* characterTempNamePtr = nullptr;
-
-	//Creation of linked list.
-	if (m_pHead == nullptr) {
+	Character* temp, * back;
+	temp = m_pHead;
+	back = NULL;
+	if (m_pHead == NULL) // Add as first in the list
+	{
 		m_pHead = newCharacter;
 		return true;
 	}
 
-	while (tempHolder != nullptr) {
-		//Set Pointer to Name
-		characterTempNamePtr = tempHolder->getName();
-
-		if (!successfullyAdded) {
-			//Insert at Head
-			if (characterNamePtr[0] < headNamePtr[0]) {
-				tempHolderTwo = m_pHead;
-				m_pHead = newCharacter;
-				m_pHead->m_pNext = tempHolderTwo;
-				successfullyAdded = true;
-				tempHolderTwo = nullptr;
-			}
-
-			if (characterNamePtr[0] > headNamePtr[0]) {
-				//Insert in Body
-				if (tempHolder->m_pNext != nullptr) {
-					if (characterNamePtr[0] >= characterTempNamePtr[0] && characterNamePtr[0] < tempHolder->m_pNext->getName()[0]) {
-						tempHolderTwo = tempHolder->m_pNext;
-						tempHolder->m_pNext = newCharacter;
-						tempHolder->m_pNext->m_pNext = tempHolderTwo;
-						tempHolderTwo = nullptr;
-						successfullyAdded = true;
-					}
-				}
-				//Insert at Tail
-				else if (characterNamePtr[0] >= characterTempNamePtr[0] && tempHolder->m_pNext == nullptr) {
-					tempHolder->m_pNext = newCharacter;
-					successfullyAdded = true;
-				}
-			}
-		}
-		tempHolder = tempHolder->m_pNext;
-	}
-	return successfullyAdded;
-}
-
-//Working - Comparison is based on null \0
-Character* CharacterList::deleteCharacter(char* characterName)
-{
-	Character* tempHolder = new Character();
-	Character* tempHolderTwo = new Character();
-	char* name;
-
-	if (m_pHead == nullptr) {
-		return m_pHead;
-	}
-
-	tempHolder = m_pHead;
-	while (tempHolder != nullptr)
+	// Find location to insert new player into
+	while ((temp != NULL) && (strcmp(temp->getName(), newCharacter->getName()) < 0))
 	{
-		name = tempHolder->getName();
-		std::cout << "Name: " << name << std::endl;
-		std::cout << "Charater Name " << characterName << std::endl;
-		if (strcmp(characterName, name) == 0) {
-			if (tempHolder->m_pNext != nullptr) {
-				tempHolderTwo->m_pNext = tempHolder->m_pNext;
-				tempHolder->m_pNext = nullptr;
-				tempHolderTwo = nullptr;
-				return tempHolder;
-			}
-			else if (tempHolder->m_pNext == nullptr) {
-				tempHolderTwo->m_pNext = nullptr;
-				tempHolderTwo = nullptr;
-				return tempHolder;
-			}
-		}
-		tempHolderTwo = tempHolder;
-		tempHolder = tempHolder->m_pNext;
+		back = temp;
+		temp = temp->m_pNext;
 	}
-	return nullptr;
-}
 
-bool CharacterList::addItem(char* characterName, Item* newItem) 
+	if (back == NULL) // Add at m_pHead of list
+	{
+		newCharacter->m_pNext = m_pHead;
+		m_pHead = newCharacter;
+	}
+	else // Insert elsewhere in the list
+	{
+		newCharacter->m_pNext = temp;
+		back->m_pNext = newCharacter;
+	}
+	return true;
+}
+//-----------------------------------------------
+// Delete a character from the list of characters
+//-----------------------------------------------
+Character* CharacterList::deleteCharacter(char* playerName)
 {
-	Character* tempHolder = m_pHead;;
-	char* name;
-	
-	while (tempHolder != nullptr) {
-		name = tempHolder->getName();
-		if (strcmp(characterName, name) == 0)
-		{
-			return tempHolder->addItem(newItem);
-		}
-		tempHolder = tempHolder->m_pNext;
+	Character* temp, * back;
+	if (m_pHead == NULL) return NULL; // Nothing to delete
+	back = NULL;
+	temp = m_pHead;
+	while ((temp != NULL) && (strcmp(temp->getName(), playerName) != 0))
+	{
+		back = temp;
+		temp = temp->m_pNext;
 	}
-	return false;
+	if (temp == NULL)
+	{
+		return NULL;
+	}
+	else if (back == NULL)
+		m_pHead = temp->m_pNext;
+	else
+		back->m_pNext = temp->m_pNext;
+	return temp;
 }
-
-Item* CharacterList::getItem(char* characterName, char* itemName) 
+//-----------------------------------------------
+// Add an item to a character's list of items.
+//-----------------------------------------------
+bool CharacterList::addItem(char* playerName, Item* newItem)
 {
-	Character* tempHolder = m_pHead;
-	char* ptrArray = nullptr;
-
-	while (tempHolder != nullptr) {
-		ptrArray = tempHolder->getName();
-		if (strcmp(characterName, ptrArray) == 0)
-		{
-			return tempHolder->getItem(itemName);
-		}
-		tempHolder = tempHolder->m_pNext;
+	Character* temp;
+	//Find the player
+	temp = m_pHead;
+	while ((temp != NULL) && (strcmp(temp->getName(), playerName) != 0))
+	{
+		temp = temp->m_pNext;
 	}
-	delete tempHolder;
-	return nullptr;
+	if (temp != NULL)
+		return temp->addItem(newItem);
+	else
+		return false;
 }
-
-Item* CharacterList::dropItem(char* characterName, char* itemName)
+//-----------------------------------------------
+// Get an item in a character's list of items.
+//-----------------------------------------------
+Item* CharacterList::getItem(char* playerName, char* itemName)
 {
-	Character* tempHolder = m_pHead;
-	char* name;
-
-	while (tempHolder != nullptr) {
-		name = tempHolder->getName();
-
-		if (strcmp(characterName, name) == 0)
-		{
-			return tempHolder->dropItem(itemName);
-		}
+	Character* temp;
+	//Find the player
+	temp = m_pHead;
+	while ((temp != NULL) && (strcmp(temp->getName(), playerName) != 0))
+	{
+		temp = temp->m_pNext;
 	}
-	return nullptr;
+	if (temp != NULL)
+		return temp->getItem(itemName);
+	else
+		return NULL;
 }
-
-void CharacterList::printCharacter()
+//-----------------------------------------------
+// Delete an item from a character's list of items.
+//-----------------------------------------------
+Item* CharacterList::dropItem(char* playerName, char* itemName)
 {
-	Character* character = m_pHead;
-	if (m_pHead == nullptr)
-		return;
-
-	while (character != nullptr) {
-		character->printAll();
-		character = character->m_pNext;
+	Character* temp;
+	//Find the player
+	temp = m_pHead;
+	while ((temp != NULL) && (strcmp(temp->getName(), playerName) != 0))
+	{
+		temp = temp->m_pNext;
+	}
+	if (temp != NULL)
+		return temp->dropItem(itemName);
+	else
+		return NULL;
+}
+//-----------------------------------------------
+// Print the list of players and all their items.
+//-----------------------------------------------
+void CharacterList::printCharacters()
+{
+	Character* temp;
+	temp = m_pHead;
+	while (temp != NULL)
+	{
+		temp->printAll();
+		temp = temp->m_pNext;
 	}
 }
 
-// /!\ This is for testing only /!\ 
 Character* CharacterList::GetHead() {
 	return m_pHead;
 }
