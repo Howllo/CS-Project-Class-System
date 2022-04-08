@@ -14,11 +14,11 @@
 
 struct Item
 {
-	char m_sItemName[64];
-	char m_sDesc[127];
+	char m_sItemName[65];
+	char m_sDesc[128];
 	int m_Itype;
 	double m_dWeight;
 	double m_dValue;
-	Item* m_pLeft;
-	Item* m_pRight;
+	Item* m_pLeft = nullptr;
+	Item* m_pRight = nullptr;
 };
