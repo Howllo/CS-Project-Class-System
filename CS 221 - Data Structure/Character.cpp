@@ -156,20 +156,39 @@ void Character::setCharisma(int chr) {
 
 bool Character::addItem(Item* item)
 {
-
+	if (item->m_Itype == 1) {
+		return m_pBattleItems->addItem(item);
+	}
+	else if (item->m_Itype == 2) {
+		return m_pTreasureItems->addItem(item);
+	}
 	return false;
 }
 
 Item* Character::getItem(char* itemName)
 {
+	Item* GetItem = m_pBattleItems->getItem(itemName);
 
-	return NULL;
+	if (GetItem == nullptr) {
+		return GetItem = m_pTreasureItems->getItem(itemName);
+	}
+	else {
+		return GetItem;
+	}
+	return nullptr;
 }
 
 Item* Character::dropItem(char* itemName)
 {
+	Item* GetItem = m_pBattleItems->getItem(itemName);
 
-	return NULL;
+	if (GetItem == nullptr) {
+		return GetItem = m_pTreasureItems->getItem(itemName);
+	}
+	else {
+		return GetItem;
+	}
+	return nullptr;
 }
 
 void Character::printAll() {
@@ -177,19 +196,21 @@ void Character::printAll() {
 		return;
 
 	//Character
-	std::cout << "\tCharacter: " << std::endl;
 	std::cout << "Name:\t" << m_sName;
 	std::cout << std::endl;
 	std::cout << "Class\t" << m_iClass;
 	std::cout << "\tAlignment:\t" << m_iAlignment << std::endl;
 	std::cout << "Hitpoints:\t" << m_iHitPoints << std::endl;
 	std::cout << "---------------------------------";
-	std::cout << std::endl << "\tCharacter Traits: " << std::endl;
+	std::cout << std::endl;
 	std::cout << "STR:\t" << m_iCharTraits[0];
 	std::cout << "\tDEX:\t" << m_iCharTraits[1] << std::endl;
 	std::cout << "CON:\t" << m_iCharTraits[2];
 	std::cout << "\tINT:\t" << m_iCharTraits[3] << std::endl;
 	std::cout << "WIS:\t" << m_iCharTraits[4];
 	std::cout << "\tCHR:\t" << m_iCharTraits[5] << std::endl;
-	std::cout << "---------------------------------" << std::endl;
+	std::cout << "---------------------------------" << std::endl << std::endl;
+
+	m_pBattleItems->printTree();
+	m_pTreasureItems->printTree();
 }

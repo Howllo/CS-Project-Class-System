@@ -20,10 +20,13 @@ private:
 	char m_sName[64];								//Name that can only hold up to 64 characters.
 	int m_iClass, m_iAlignment, m_iHitPoints;		//The player class, their alignment, and how many hitpoints they have.
 	int m_iCharTraits[6];							//Array that holds all the character stats, or known as traits.
-	Possessions *m_pBattleItems;
-	Possessions *m_pTreasureItems;
+
 
 public:
+	Possessions* m_pBattleItems;
+	Possessions* m_pTreasureItems;
+	// MOVE THESE BACK TO PRIVATE /*\ //*\
+
 	//Constructors
 	Character();		//Constructor
 	Character(char* name, int cl, int al, int hp, int str, int dex, int con, int itl, int wis, int chr);	//Second Constructor
