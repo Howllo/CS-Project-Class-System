@@ -21,56 +21,131 @@ Possessions::~Possessions() {
 
 bool Possessions::addItem(Item* newItem) {
 	Item* temp = m_pRoot;
-	Item* back = nullptr;
 
-	while (temp != nullptr) {
-		back = temp;
-
-		if (temp->m_sItemName != nullptr) {
-			if (strcmp(newItem->m_sItemName, temp->m_sItemName) >= 0) {
-				temp = temp->m_pLeft;
-			}
-			else {
-				std::cout << "Entered else!" << std::endl;
-				temp = temp->m_pRight;
-			}
-		}
-	}
-	if (back == nullptr) {
+	if (m_pRoot == nullptr) {
 		m_pRoot = newItem;
 		return true;
 	}
-	else if (strcmp(newItem->m_sItemName, back->m_sItemName) >= 0) {
-		back->m_pLeft = newItem;
 
-		//Check the balance of the tree.
-		bool checkTree = CheckBalance(m_pRoot);
-		if (!checkTree) {
-			RebalanceTree(m_pRoot);
+	while (temp != nullptr) {
+		if (strcmp(newItem->m_sItemName, temp->m_sItemName) >= 0) {				//STRCMP > = LEFT < = RIGHT
+			if (temp->m_pLeft == nullptr) {
+				temp->m_pLeft = newItem;
+				bool isBalanced = IsTreeBalance(m_pRoot);
+
+				//Balance the tree.
+				if (!isBalanced) {
+					BalanceTree(m_pRoot);
+				}
+
+				return true;
+			}
+			temp = temp->m_pLeft;
 		}
+		else if (strcmp(newItem->m_sItemName, temp->m_sItemName) < 0) {
+			if (temp->m_pRight == nullptr) {
+				temp->m_pRight = newItem;
+				bool isBalanced = IsTreeBalance(m_pRoot);
 
-		return true;
-	}
-	else {
-		back->m_pRight = newItem;
-
-		//Check the balance of the tree.
-		bool checkTree = CheckBalance(m_pRoot);
-		if (!checkTree) {
-			RebalanceTree(m_pRoot);
+				//Balance the tree.
+				if (!isBalanced) {
+					BalanceTree(m_pRoot);
+				}
+				return true;
+			}
+			temp = temp->m_pRight;
 		}
-
-		return true;
 	}
-
 	return false;
 }
 
-Item *Possessions::dropItem(char* itemName) {
+Item* Possessions::dropItem(char* itemName) {
 	Item* temp = m_pRoot;
 	Item* back = nullptr;
+	Item* m_pTempLeft = nullptr;
+	Item* m_pTempRight = nullptr;
+	bool wasLeftused = false;
 
+	while (temp != nullptr) {
+		if (temp != nullptr) {
+			if (strcmp(temp->m_sItemName, itemName) == 0) {
+				break;
+			}
+		}
 
+		back = temp;
+		if (strcmp(temp->m_sItemName, itemName) > 0) {
+			temp = temp->m_pLeft;
+			wasLeftused = true;
+		}
+		else if(strcmp(temp->m_sItemName, itemName) < 0) {
+			temp = temp->m_pRight;
+			wasLeftused = false;
+		} 
+	}
+
+	if (temp != nullptr) {
+		if (back == nullptr) {
+			Item* m_pHolder = temp->m_pRight->m_pLeft;
+			m_pTempLeft = temp->m_pLeft;
+			m_pTempRight = temp->m_pRight;
+			temp->m_pRight->m_pLeft = nullptr;
+
+			//Set Root to right subtree.
+			m_pRoot = m_pTempRight;
+			m_pRoot->m_pLeft = m_pTempLeft;
+			RebuildSubtree(m_pHolder);
+
+			temp->m_pLeft = nullptr;
+			temp->m_pRight = nullptr;
+
+			return temp;
+		}	//One Children to node
+		else if (temp->m_pLeft == nullptr) {
+			if (wasLeftused) {
+				back->m_pLeft = temp->m_pRight;
+				return temp;
+			}
+			else {
+				back->m_pRight = temp->m_pRight;
+				return temp;
+			}
+		}
+		else if (temp->m_pRight == nullptr) {
+			if (wasLeftused) {
+				back->m_pLeft = temp->m_pLeft;
+				return temp;
+			}
+			else {
+				back->m_pRight = temp->m_pLeft;
+				return temp;
+			}
+		}	//No Children to Node
+		else if (temp->m_pLeft == nullptr && temp->m_pRight == nullptr) {
+			if (wasLeftused) {
+				back->m_pLeft = nullptr;
+				return temp;
+			}
+			else {
+				back->m_pRight = nullptr;
+				return temp;
+			}
+		}	//Two Children
+		else {
+			m_pTempLeft = temp->m_pRight->m_pLeft;
+			temp->m_pRight->m_pLeft = nullptr;
+
+			if (wasLeftused) {
+				back->m_pLeft = temp->m_pRight;
+			}
+			else {
+				back->m_pRight = temp->m_pRight;
+			}
+
+			RebuildSubtree(m_pTempLeft);
+			return temp;
+		}
+	}
 
 	return nullptr;
 }
@@ -129,23 +204,52 @@ void Possessions::printAll(Item* rt){
 	printAll(rt->m_pRight);
 }
 
-void Possessions::RebalanceTree(Item* rt) {
-	return;
+void Possessions::BalanceTree(Item* rt) {
+
+	if(rt->m_pLeft == nullptr && rt->m_pRight != nullptr){
+		
+	}
+	
 }
 
-bool Possessions::CheckBalance(Item* rt) {
+void Possessions::RebuildSubtree(Item* rt) {
+	if (rt == nullptr) return;
+
+	RebuildSubtree(rt->m_pLeft);
+	RebuildSubtree(rt->m_pRight);
+
+	//Creating a copy of the node.
+	Item* newNode = new Item;
+	strcpy_s(newNode->m_sItemName, rt->m_sItemName);
+	strcpy_s(newNode->m_sDesc, rt->m_sDesc);
+	newNode->m_dWeight = rt->m_dWeight;
+	newNode->m_dValue = rt->m_dValue;
+	newNode->m_Itype = rt->m_Itype;
+
+	//Send the node to be placed back into the tree.
+	addItem(newNode);
+
+	//Delete the original node.
+	delete rt;
+}
+
+bool Possessions::IsTreeBalance(Item* rt) {
 	if (rt == nullptr) return false;
 
-	int CheckLeft = CheckHeight(rt->m_pLeft);
-	int CheckRight = CheckHeight(rt->m_pRight);
+	int CheckLeft = GetHeight(rt->m_pLeft);
+	int CheckRight = GetHeight(rt->m_pRight);
 
-	if (std::abs(CheckLeft - CheckRight) <= 1 && CheckBalance(rt->m_pLeft) && CheckBalance(rt->m_pRight)) {
+	if (std::abs(CheckLeft - CheckRight) <= 0 && IsTreeBalance(rt->m_pLeft) && IsTreeBalance(rt->m_pRight))
 		return true;
-	}
+
 	return false;
 }
 
-int Possessions::CheckHeight(Item* rt) {
+int Possessions::GetHeight(Item* rt) {
 	if (rt == nullptr) return 0;
-	return 1 + std::max(CheckHeight(rt->m_pLeft), CheckHeight(rt->m_pRight));
+	return 1 + std::max(GetHeight(rt->m_pLeft), GetHeight(rt->m_pRight));
+}
+
+Item* Possessions::GetRoot() {
+	return m_pRoot;
 }
