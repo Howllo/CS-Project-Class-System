@@ -180,10 +180,10 @@ Item* Character::getItem(char* itemName)
 
 Item* Character::dropItem(char* itemName)
 {
-	Item* GetItem = m_pBattleItems->getItem(itemName);
+	Item* GetItem = m_pBattleItems->dropItem(itemName);
 
 	if (GetItem == nullptr) {
-		return GetItem = m_pTreasureItems->getItem(itemName);
+		return GetItem = m_pTreasureItems->dropItem(itemName);
 	}
 	else {
 		return GetItem;
